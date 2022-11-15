@@ -17,4 +17,13 @@ module.exports = {
     req.body.role = req.body.role.toUpperCase();
     next();
   },
+  validateSignIn: (req, res, next) => {
+    const { email, password } = req.body;
+    if (email === "" || email === undefined) {
+      return res.status(400).json({ message: "EMAIL CAN NOT BE EMPTY !" });
+    } else if (password === "" || password === undefined) {
+      return res.status(400).json({ message: "PASSWORD CAN NOT BE EMPTY !" });
+    }
+    next();
+  },
 };
