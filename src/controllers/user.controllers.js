@@ -65,4 +65,15 @@ module.exports = {
       return res.json({ error: error });
     }
   },
+  getUsers: async (req, res) => {
+    try {
+      const response = await User.findAll();
+      return res
+        .status(200)
+        .json({ message: "GET USERS SUCCESSFULLY", data: response });
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: error });
+    }
+  },
 };
