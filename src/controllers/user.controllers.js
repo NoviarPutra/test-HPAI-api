@@ -57,6 +57,8 @@ module.exports = {
         process.env.ACCESS_TOKEN_SECRET,
         options
       );
+
+      //   RESPONSE TO CLIENT
       return res
         .status(200)
         .json({ message: "LOGIN SUCCESS", accessToken: accessToken });
@@ -71,6 +73,35 @@ module.exports = {
       return res
         .status(200)
         .json({ message: "GET USERS SUCCESSFULLY", data: response });
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: error });
+    }
+  },
+  getUserByID: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const response = await User.findOne({ where: { id: id } });
+      if (!response) return res.status(404).json({ message: "USER NOT FOUND" });
+      return res.status(200).json({ data: response.dataValues });
+    } catch (error) {
+      console.log(error);
+      return res.json({ error: error });
+    }
+  },
+  deleteUser: async (req, res) => {
+    try {
+      // DESTRUCT PARAMS
+      const { id } = req.params;
+
+      //   CHECK ROLE
+      if (req.user.role !== "ADMIN")
+        return res.status(403).json({ message: "ADMIN ONLY" });
+
+      // IF ADMIN
+      const response = await User.destroy({ where: { id: id } });
+      if (!response) return res.status(404).json({ message: "ID NOT FOUND" });
+      return res.status(200).json({ message: `ID ${id} DELETED` });
     } catch (error) {
       console.log(error);
       return res.json({ error: error });
